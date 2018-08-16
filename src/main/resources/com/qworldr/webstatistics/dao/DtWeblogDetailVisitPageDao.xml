@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qworldr.webstatistics.dao.DtWeblogDetailVisitPageDao" >
+    <resultMap id="BaseResultMap" type="com.qworldr.webstatistics.generator.bean.DtWeblogDetailVisitPage" >
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="analyze_date" property="analyzeDate" jdbcType="DATE" />
+        <result column="is_new_visitor" property="isNewVisitor" jdbcType="BIT" />
+        <result column="visit_page" property="visitPage" jdbcType="VARCHAR" />
+        <result column="origin_domain" property="originDomain" jdbcType="VARCHAR" />
+        <result column="pv" property="pv" jdbcType="INTEGER" />
+        <result column="uv" property="uv" jdbcType="INTEGER" />
+        <result column="ip_num" property="ipNum" jdbcType="INTEGER" />
+        <result column="new_visitor" property="newVisitor" jdbcType="INTEGER" />
+        <result column="avg_visit_time" property="avgVisitTime" jdbcType="INTEGER" />
+        <result column="avg_conversions" property="avgConversions" jdbcType="INTEGER" />
+        <result column="avg_deepth" property="avgDeepth" jdbcType="INTEGER" />
+        <result column="outcount" property="outcount" jdbcType="INTEGER" />
+        <result column="intocount" property="intocount" jdbcType="INTEGER" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, analyze_date, is_new_visitor, visit_page, origin_domain, pv, uv, ip_num, new_visitor,
+    avg_visit_time, avg_conversions, avg_deepth, outcount, intocount
+    </sql>
+    <sql id="Group_Column_List" >
+        id, analyze_date, is_new_visitor, visit_page, origin_domain, sum(pv) pv, sum(uv) uv, sum(ip_num) ip_num, sum(new_visitor) new_visitor,
+        avg(avg_visit_time) avg_visit_time, avg(avg_conversions) avg_conversions, avg(avg_deepth) avg_deepth, sum(outcount) outcount, sum(intocount) intocount
+    </sql>
+    <sql id="Where_Clause">
+        <where >
+            <if test="param.end_time!=null">
+                and analyze_date between #{param.start_time} and #{param.end_time}
+            </if>
+            <if test="param.end_time==null and param.start_time!=null">
+                and  analyze_date = #{param.start_time}
+            </if>
+            <if test="param.originDomain!=null">
+                and origin_domain = #{param.originDomain}
+            </if>
+            <if test="param.isNewVisitor!=null">
+                and is_new_visitor = #{param.isNewVisitor}
+            </if>
+        </where>
+    </sql>
+    <select id="selectDtWebLogVisitPageSummary" resultMap="BaseResultMap" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="Group_Column_List"/>
+        FROM
+        dt_weblog_detail_visitpage
+        <include refid="Where_Clause" />
+    </select>
+    <select id="selectDtWebLogVisitPage" resultMap="BaseResultMap" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+         <include refid="Base_Column_List"/>
+        FROM
+        dt_weblog_detail_visitpage
+        <include refid="Where_Clause" />
+        order by pv desc
+    </select>
+    <select id="selectDtWebLogVisitPageOrderByOutCount" resultMap="BaseResultMap" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        dt_weblog_detail_visitpage
+        <include refid="Where_Clause" />
+        order by outcount desc,pv desc
+    </select>
+    <select id="selectDtWebLogVisitPageOrderByIntoCount" resultMap="BaseResultMap" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        dt_weblog_detail_visitpage
+        <include refid="Where_Clause" />
+        order by intocount desc ,pv desc
+    </select>
+</mapper>

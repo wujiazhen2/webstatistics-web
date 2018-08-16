@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qworldr.webstatistics.dao.CommonsDao" >
+    <resultMap id="DtWeblogDetailDay" type="com.qworldr.webstatistics.generator.bean.DtWeblogDetailDay" >
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="analyze_date" property="analyzeDate" jdbcType="DATE" />
+        <result column="origin_url" property="hour" jdbcType="INTEGER" />
+        <result column="origin" property="origin" jdbcType="VARCHAR" />
+        <result column="is_new_visitor" property="isNewVisitor" jdbcType="VARCHAR" />
+        <result column="pv" property="pv" jdbcType="INTEGER" />
+        <result column="uv" property="uv" jdbcType="INTEGER" />
+        <result column="ip_num" property="ipNum" jdbcType="INTEGER" />
+        <result column="new_visitor" property="newVisitor" jdbcType="INTEGER" />
+        <result column="avg_visit_time" property="avgVisitTime" jdbcType="CHAR" />
+        <result column="avg_conversions" property="avgConversions" jdbcType="INTEGER" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+    </resultMap>
+    <resultMap id="DtWeblogDetail" type="com.qworldr.webstatistics.generator.bean.DtWeblogDetail" >
+        <id column="id" property="id" jdbcType="CHAR" />
+        <result column="analyze_date" property="analyzeDate" jdbcType="DATE" />
+        <result column="hour" property="hour" jdbcType="INTEGER" />
+        <result column="is_new_visitor" property="isNewVisitor" jdbcType="BIT" />
+        <result column="origin_page" property="originPage" jdbcType="VARCHAR" />
+        <result column="origin_domain" property="originDomain" jdbcType="VARCHAR" />
+        <result column="search_engine" property="searchEngine" jdbcType="VARCHAR" />
+        <result column="pv" property="pv" jdbcType="INTEGER" />
+        <result column="uv" property="uv" jdbcType="INTEGER" />
+        <result column="ip_num" property="ipNum" jdbcType="INTEGER" />
+        <result column="new_visitor" property="newVisitor" jdbcType="INTEGER" />
+        <result column="avg_visit_time" property="avgVisitTime" jdbcType="INTEGER" />
+        <result column="avg_conversions" property="avgConversions" jdbcType="INTEGER" />
+        <result column="jump_out_percent" property="jumpOutPercent" jdbcType="DECIMAL" />
+        <result column="origin_type" property="originType" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="day_group_Column_List" >
+        id, analyze_date, type,  SUM( pv ) as pv,SUM( uv ) as uv,sum( ip_num ) as ip_num, sum( new_visitor ) as new_visitor,
+        avg( avg_visit_time ) as avg_visit_time, avg( avg_conversions ) as avg_conversions,avg(jump_out_percent) jump_out_percent
+    </sql>
+    <select id="selectSummaryGroupByDateAndType" resultMap="DtWeblogDetailDay" parameterType="java.util.Date">
+        SELECT
+        <include refid="day_group_Column_List" />
+        FROM
+        dt_weblog_detail_day
+        where type in (1,2,3)
+        or analyze_date =#{value}
+        GROUP BY
+        analyze_date,
+        type
+    </select>
+
+
+    <sql id="group_Column_List" >
+        id, analyze_date, hour, is_new_visitor, origin_domain,search_engine,origin_page,sum(pv) pv,sum(uv) uv, sum(ip_num) ip_num
+        , sum(new_visitor) new_visitor, avg(avg_visit_time) avg_visit_time, avg(avg_conversions) avg_conversions,origin_type,avg(jump_out_percent) jump_out_percent
+    </sql>
+    <sql id="Where_Clause">
+        <where >
+            <if test="param.end_time!=null">
+                and analyze_date between #{param.start_time} and #{param.end_time}
+            </if>
+            <if test="param.end_time==null and param.start_time!=null">
+                and  analyze_date = #{param.start_time}
+            </if>
+            <if test="param.originDomain!=null">
+                and origin_domain = #{param.originDomain}
+            </if>
+            <if test="param.isNewVisitor!=null">
+                and is_new_visitor = #{param.isNewVisitor}
+            </if>
+        </where>
+    </sql>
+    <sql id="Where_Clause_alias">
+        <where >
+            <if test="param.end_time!=null">
+                and t.analyze_date between #{param.start_time} and #{param.end_time}
+            </if>
+            <if test="param.end_time==null and param.start_time!=null">
+                and  t.analyze_date = #{param.start_time}
+            </if>
+            <if test="param.originDomain!=null">
+                and t.origin_domain = #{param.originDomain}
+            </if>
+            <if test="param.isNewVisitor!=null">
+                and t.is_new_visitor = #{param.isNewVisitor}
+            </if>
+        </where>
+    </sql>
+    <sql id="limit_sql">
+        <if test="param.limit != null" >
+            limit ${param.limit}
+        </if>
+        <if test="param.offset != null" >
+            offset ${param.offset}
+        </if>
+    </sql>
+    <select id="selectDtWebLog" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="group_Column_List"/>
+        FROM
+        dt_weblog_detail
+        <include refid="Where_Clause" />
+        group by analyze_date,hour
+        order by analyze_date,hour
+        <include refid="limit_sql"></include>
+    </select>
+    <select id="selectSumDtWebLog" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+          <include refid="group_Column_List"/>
+        FROM
+        dt_weblog_detail
+        <include refid="Where_Clause" />
+        <include refid="limit_sql"></include>
+    </select>
+
+    <select id="selectDtWebLogGroupByOriginTypeAndDateTime" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="group_Column_List"/>
+        FROM
+        dt_weblog_detail
+        <include refid="Where_Clause" />
+        group by analyze_date,hour,origin_type
+        order by analyze_date,hour
+        <include refid="limit_sql"></include>
+    </select>
+    <select id="selectDtWebLogGroupByOriginType" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="group_Column_List"/>
+        FROM
+        dt_weblog_detail
+        <include refid="Where_Clause" />
+        group by origin_type
+        order by pv desc
+        <include refid="limit_sql"></include>
+    </select>
+    <select id="selectDtWebLogGroupByOriginDomainAndDateTime" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+                SELECT
+                t.id,
+                t.analyze_date,
+                t.HOUR,
+                t.is_new_visitor,
+                t.origin_domain,
+                t.search_engine,
+                t.origin_page,
+                sum( t.pv ) pv,
+                sum( uv ) uv,
+                sum( ip_num ) ip_num,
+                sum( new_visitor ) new_visitor,
+                avg( avg_visit_time ) avg_visit_time,
+                avg( avg_conversions ) avg_conversions,
+                avg(jump_out_percent) jump_out_percent,
+                origin_type
+                FROM
+                dt_weblog_detail t
+                left join
+                ( SELECT origin_domain,analyze_date,sum(pv) pv FROM dt_weblog_detail
+                   <include refid="Where_Clause" />
+                   and origin_domain !='\\N'
+                GROUP BY analyze_date, origin_domain ORDER BY pv desc  <include refid="limit_sql"></include> ) t1
+                on t.analyze_date=t1.analyze_date and t.origin_domain=t1.origin_domain
+                <include refid="Where_Clause_alias" />
+                and
+                t1.origin_domain is not null
+                and t.origin_domain !='\\N'
+                GROUP BY
+                t.analyze_date,
+                HOUR,
+                origin_domain
+                ORDER BY
+                t.analyze_date,
+                HOUR
+    </select>
+    <select id="selectDtWebLogGroupByOriginDomain" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="group_Column_List"/>
+        FROM
+        dt_weblog_detail
+        <include refid="Where_Clause" />
+        and origin_domain !='\\N'
+        group by origin_domain
+        order by pv desc
+        <include refid="limit_sql"></include>
+    </select>
+    <select id="selectDtWebLogGroupByOriginPageAndDateTime" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+                       SELECT
+                    t.id,
+                    t.analyze_date,
+                    t.HOUR,
+                    t.is_new_visitor,
+                    t.origin_domain,
+                    t.search_engine,
+                    t.origin_page,
+                    sum( t.pv ) pv,
+                    sum( uv ) uv,
+                    sum( ip_num ) ip_num,
+                    sum( new_visitor ) new_visitor,
+                    avg( avg_visit_time ) avg_visit_time,
+                    avg( avg_conversions ) avg_conversions,
+                    avg(jump_out_percent) jump_out_percent,
+                    origin_type
+                FROM
+                    dt_weblog_detail t
+                    left join
+                    ( SELECT origin_page,analyze_date,sum(pv) pvs FROM dt_weblog_detail
+                    <include refid="Where_Clause" />
+                    and origin_domain !='\\N'
+                    GROUP BY analyze_date, origin_domain ORDER BY pvs desc  <include refid="limit_sql"></include> ) t1
+                    on t.analyze_date=t1.analyze_date and t.origin_page=t1.origin_page
+                    <include refid="Where_Clause_alias" />
+                      and t.origin_page !='\\N'
+                    and
+                        t1.origin_page is not null
+                GROUP BY
+                    t.analyze_date,
+                    HOUR,
+                    origin_page
+                ORDER BY
+                    t.analyze_date,
+                HOUR
+    </select>
+    <select id="selectDtWebLogGroupByOriginPage" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="group_Column_List"/>
+        FROM
+        dt_weblog_detail
+        <include refid="Where_Clause" />
+        and origin_page !='\\N'
+        group by origin_page
+        order by pv desc
+        <include refid="limit_sql"></include>
+    </select>
+    <select id="selectDtWebLogGroupByOriginSEAndDateTime" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="group_Column_List"/>
+        FROM
+        dt_weblog_detail
+        <include refid="Where_Clause" />
+        and origin_type='2'
+        group by analyze_date,hour,origin_domain
+        order by analyze_date,hour
+        <include refid="limit_sql"></include>
+    </select>
+    <select id="selectDtWebLogGroupByOriginSE" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        SELECT
+        <include refid="group_Column_List"/>
+        FROM
+        dt_weblog_detail
+        <include refid="Where_Clause" />
+        and origin_type='2'
+        group by origin_domain
+        order by pv desc
+        <include refid="limit_sql"></include>
+    </select>
+    <select id="selectTopDtWebLogOriginDomain" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        select
+         <include refid="group_Column_List"/>
+        from dt_weblog_detail
+        <include refid="Where_Clause" />
+        and origin_domain !='\\N'
+        group by origin_domain
+        order by sum(pv)  desc 
+        <include refid="limit_sql"/>
+    </select>
+    <select id="selectTopDtWebLogOriginPage" resultMap="DtWeblogDetail" parameterType="com.qworldr.webstatistics.bean.example.QueryExample">
+        select
+        <include refid="group_Column_List"/>
+        from dt_weblog_detail
+        <include refid="Where_Clause" />
+        and origin_page !='\\N'
+        group by origin_domain
+        order by sum(pv)  desc
+        <include refid="limit_sql"/>
+    </select>
+</mapper>

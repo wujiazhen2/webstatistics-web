@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qworldr.webstatistics.generator.dao.DtWeblogDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.qworldr.webstatistics.generator.bean.DtWeblogDetail" >
+    <id column="id" property="id" jdbcType="CHAR" />
+    <result column="analyze_date" property="analyzeDate" jdbcType="DATE" />
+    <result column="hour" property="hour" jdbcType="INTEGER" />
+    <result column="is_new_visitor" property="isNewVisitor" jdbcType="BIT" />
+    <result column="origin_page" property="originPage" jdbcType="VARCHAR" />
+    <result column="search_engine" property="searchEngine" jdbcType="VARCHAR" />
+    <result column="origin_domain" property="originDomain" jdbcType="VARCHAR" />
+    <result column="pv" property="pv" jdbcType="INTEGER" />
+    <result column="uv" property="uv" jdbcType="INTEGER" />
+    <result column="ip_num" property="ipNum" jdbcType="INTEGER" />
+    <result column="new_visitor" property="newVisitor" jdbcType="INTEGER" />
+    <result column="avg_visit_time" property="avgVisitTime" jdbcType="INTEGER" />
+    <result column="avg_conversions" property="avgConversions" jdbcType="INTEGER" />
+    <result column="jump_out_percent" property="jumpOutPercent" jdbcType="DECIMAL" />
+    <result column="origin_type" property="originType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, analyze_date, hour, is_new_visitor, origin_page, search_engine, origin_domain, 
+    pv, uv, ip_num, new_visitor, avg_visit_time, avg_conversions, jump_out_percent, origin_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qworldr.webstatistics.generator.bean.DtWeblogDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dt_weblog_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null" >
+      limit ${limit}
+    </if>
+    <if test="offset != null" >
+      offset ${offset}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from dt_weblog_detail
+    where id = #{id,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from dt_weblog_detail
+    where id = #{id,jdbcType=CHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qworldr.webstatistics.generator.bean.DtWeblogDetailExample" >
+    delete from dt_weblog_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qworldr.webstatistics.generator.bean.DtWeblogDetail" >
+    insert into dt_weblog_detail (id, analyze_date, hour, 
+      is_new_visitor, origin_page, search_engine, 
+      origin_domain, pv, uv, 
+      ip_num, new_visitor, avg_visit_time, 
+      avg_conversions, jump_out_percent, origin_type
+      )
+    values (#{id,jdbcType=CHAR}, #{analyzeDate,jdbcType=DATE}, #{hour,jdbcType=INTEGER}, 
+      #{isNewVisitor,jdbcType=BIT}, #{originPage,jdbcType=VARCHAR}, #{searchEngine,jdbcType=VARCHAR}, 
+      #{originDomain,jdbcType=VARCHAR}, #{pv,jdbcType=INTEGER}, #{uv,jdbcType=INTEGER}, 
+      #{ipNum,jdbcType=INTEGER}, #{newVisitor,jdbcType=INTEGER}, #{avgVisitTime,jdbcType=INTEGER}, 
+      #{avgConversions,jdbcType=INTEGER}, #{jumpOutPercent,jdbcType=DECIMAL}, #{originType,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qworldr.webstatistics.generator.bean.DtWeblogDetail" >
+    insert into dt_weblog_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="analyzeDate != null" >
+        analyze_date,
+      </if>
+      <if test="hour != null" >
+        hour,
+      </if>
+      <if test="isNewVisitor != null" >
+        is_new_visitor,
+      </if>
+      <if test="originPage != null" >
+        origin_page,
+      </if>
+      <if test="searchEngine != null" >
+        search_engine,
+      </if>
+      <if test="originDomain != null" >
+        origin_domain,
+      </if>
+      <if test="pv != null" >
+        pv,
+      </if>
+      <if test="uv != null" >
+        uv,
+      </if>
+      <if test="ipNum != null" >
+        ip_num,
+      </if>
+      <if test="newVisitor != null" >
+        new_visitor,
+      </if>
+      <if test="avgVisitTime != null" >
+        avg_visit_time,
+      </if>
+      <if test="avgConversions != null" >
+        avg_conversions,
+      </if>
+      <if test="jumpOutPercent != null" >
+        jump_out_percent,
+      </if>
+      <if test="originType != null" >
+        origin_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=CHAR},
+      </if>
+      <if test="analyzeDate != null" >
+        #{analyzeDate,jdbcType=DATE},
+      </if>
+      <if test="hour != null" >
+        #{hour,jdbcType=INTEGER},
+      </if>
+      <if test="isNewVisitor != null" >
+        #{isNewVisitor,jdbcType=BIT},
+      </if>
+      <if test="originPage != null" >
+        #{originPage,jdbcType=VARCHAR},
+      </if>
+      <if test="searchEngine != null" >
+        #{searchEngine,jdbcType=VARCHAR},
+      </if>
+      <if test="originDomain != null" >
+        #{originDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="pv != null" >
+        #{pv,jdbcType=INTEGER},
+      </if>
+      <if test="uv != null" >
+        #{uv,jdbcType=INTEGER},
+      </if>
+      <if test="ipNum != null" >
+        #{ipNum,jdbcType=INTEGER},
+      </if>
+      <if test="newVisitor != null" >
+        #{newVisitor,jdbcType=INTEGER},
+      </if>
+      <if test="avgVisitTime != null" >
+        #{avgVisitTime,jdbcType=INTEGER},
+      </if>
+      <if test="avgConversions != null" >
+        #{avgConversions,jdbcType=INTEGER},
+      </if>
+      <if test="jumpOutPercent != null" >
+        #{jumpOutPercent,jdbcType=DECIMAL},
+      </if>
+      <if test="originType != null" >
+        #{originType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qworldr.webstatistics.generator.bean.DtWeblogDetailExample" resultType="java.lang.Integer" >
+    select count(*) from dt_weblog_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update dt_weblog_detail
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=CHAR},
+      </if>
+      <if test="record.analyzeDate != null" >
+        analyze_date = #{record.analyzeDate,jdbcType=DATE},
+      </if>
+      <if test="record.hour != null" >
+        hour = #{record.hour,jdbcType=INTEGER},
+      </if>
+      <if test="record.isNewVisitor != null" >
+        is_new_visitor = #{record.isNewVisitor,jdbcType=BIT},
+      </if>
+      <if test="record.originPage != null" >
+        origin_page = #{record.originPage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.searchEngine != null" >
+        search_engine = #{record.searchEngine,jdbcType=VARCHAR},
+      </if>
+      <if test="record.originDomain != null" >
+        origin_domain = #{record.originDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pv != null" >
+        pv = #{record.pv,jdbcType=INTEGER},
+      </if>
+      <if test="record.uv != null" >
+        uv = #{record.uv,jdbcType=INTEGER},
+      </if>
+      <if test="record.ipNum != null" >
+        ip_num = #{record.ipNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.newVisitor != null" >
+        new_visitor = #{record.newVisitor,jdbcType=INTEGER},
+      </if>
+      <if test="record.avgVisitTime != null" >
+        avg_visit_time = #{record.avgVisitTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.avgConversions != null" >
+        avg_conversions = #{record.avgConversions,jdbcType=INTEGER},
+      </if>
+      <if test="record.jumpOutPercent != null" >
+        jump_out_percent = #{record.jumpOutPercent,jdbcType=DECIMAL},
+      </if>
+      <if test="record.originType != null" >
+        origin_type = #{record.originType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update dt_weblog_detail
+    set id = #{record.id,jdbcType=CHAR},
+      analyze_date = #{record.analyzeDate,jdbcType=DATE},
+      hour = #{record.hour,jdbcType=INTEGER},
+      is_new_visitor = #{record.isNewVisitor,jdbcType=BIT},
+      origin_page = #{record.originPage,jdbcType=VARCHAR},
+      search_engine = #{record.searchEngine,jdbcType=VARCHAR},
+      origin_domain = #{record.originDomain,jdbcType=VARCHAR},
+      pv = #{record.pv,jdbcType=INTEGER},
+      uv = #{record.uv,jdbcType=INTEGER},
+      ip_num = #{record.ipNum,jdbcType=INTEGER},
+      new_visitor = #{record.newVisitor,jdbcType=INTEGER},
+      avg_visit_time = #{record.avgVisitTime,jdbcType=INTEGER},
+      avg_conversions = #{record.avgConversions,jdbcType=INTEGER},
+      jump_out_percent = #{record.jumpOutPercent,jdbcType=DECIMAL},
+      origin_type = #{record.originType,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qworldr.webstatistics.generator.bean.DtWeblogDetail" >
+    update dt_weblog_detail
+    <set >
+      <if test="analyzeDate != null" >
+        analyze_date = #{analyzeDate,jdbcType=DATE},
+      </if>
+      <if test="hour != null" >
+        hour = #{hour,jdbcType=INTEGER},
+      </if>
+      <if test="isNewVisitor != null" >
+        is_new_visitor = #{isNewVisitor,jdbcType=BIT},
+      </if>
+      <if test="originPage != null" >
+        origin_page = #{originPage,jdbcType=VARCHAR},
+      </if>
+      <if test="searchEngine != null" >
+        search_engine = #{searchEngine,jdbcType=VARCHAR},
+      </if>
+      <if test="originDomain != null" >
+        origin_domain = #{originDomain,jdbcType=VARCHAR},
+      </if>
+      <if test="pv != null" >
+        pv = #{pv,jdbcType=INTEGER},
+      </if>
+      <if test="uv != null" >
+        uv = #{uv,jdbcType=INTEGER},
+      </if>
+      <if test="ipNum != null" >
+        ip_num = #{ipNum,jdbcType=INTEGER},
+      </if>
+      <if test="newVisitor != null" >
+        new_visitor = #{newVisitor,jdbcType=INTEGER},
+      </if>
+      <if test="avgVisitTime != null" >
+        avg_visit_time = #{avgVisitTime,jdbcType=INTEGER},
+      </if>
+      <if test="avgConversions != null" >
+        avg_conversions = #{avgConversions,jdbcType=INTEGER},
+      </if>
+      <if test="jumpOutPercent != null" >
+        jump_out_percent = #{jumpOutPercent,jdbcType=DECIMAL},
+      </if>
+      <if test="originType != null" >
+        origin_type = #{originType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qworldr.webstatistics.generator.bean.DtWeblogDetail" >
+    update dt_weblog_detail
+    set analyze_date = #{analyzeDate,jdbcType=DATE},
+      hour = #{hour,jdbcType=INTEGER},
+      is_new_visitor = #{isNewVisitor,jdbcType=BIT},
+      origin_page = #{originPage,jdbcType=VARCHAR},
+      search_engine = #{searchEngine,jdbcType=VARCHAR},
+      origin_domain = #{originDomain,jdbcType=VARCHAR},
+      pv = #{pv,jdbcType=INTEGER},
+      uv = #{uv,jdbcType=INTEGER},
+      ip_num = #{ipNum,jdbcType=INTEGER},
+      new_visitor = #{newVisitor,jdbcType=INTEGER},
+      avg_visit_time = #{avgVisitTime,jdbcType=INTEGER},
+      avg_conversions = #{avgConversions,jdbcType=INTEGER},
+      jump_out_percent = #{jumpOutPercent,jdbcType=DECIMAL},
+      origin_type = #{originType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=CHAR}
+  </update>
+</mapper>

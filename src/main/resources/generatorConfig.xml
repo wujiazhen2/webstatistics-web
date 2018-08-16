@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <classPathEntry location=".\depends\mysql-connector-java-5.1.34.jar"/>
+    <context id="context_contract">
+        <plugin type="org.mybatis.generator.plugins.AddLimitOffsetPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+     
+       <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost/webstatistics" userId="root"
+                        password="ROOT"/>
+        <javaModelGenerator targetPackage="com.qworldr.webstatistics.generator.bean"
+                            targetProject="./src/main/java"/>
+        <sqlMapGenerator targetPackage="com.qworldr.webstatistics.generator.dao"
+                         targetProject="./src/main/resources"/>
+        <javaClientGenerator targetPackage="com.qworldr.webstatistics.generator.dao"
+                             targetProject="./src/main/java" type="XMLMAPPER"/>
+        <table tableName="dt_weblog_detail_day" domainObjectName="DtWeblogDetailDay"></table>
+        <table tableName="dt_weblog_detail_hour" domainObjectName="DtWeblogDetailHour"></table>
+        <table tableName="dictionary" domainObjectName="Dictionary"></table>
+        <table tableName="dt_weblog_detail_visitor" domainObjectName="DtWeblogDetailVisitor"></table>
+        <table tableName="dt_weblog_detail_origin" domainObjectName="DtWeblogDetailOrigin"></table>
+        <table tableName="dt_weblog_detail" domainObjectName="DtWeblogDetail"></table>
+        <table tableName="dt_weblog_detail_term" domainObjectName="DtWeblogDetailTerm"></table>
+        <table tableName="dt_weblog_detail_visitpage" domainObjectName="DtWeblogDetailVisitPage"></table>
+        <table tableName="dt_weblog_detail_terriory" domainObjectName="DtWeblogDetailTerriory"></table>
+    </context>
+
+</generatorConfiguration>
+        <!--  mvn mybatis-generator:generate   -->

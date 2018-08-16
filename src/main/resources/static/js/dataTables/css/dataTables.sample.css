@@ -1,0 +1,54 @@
+.sample_table,.bivariate_table{
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+.sample_table th{
+    height: 50px;
+}
+.bivariate_table th{
+    height: 50px;
+    text-align: right;
+    padding-right: 15px;
+}
+.bivariate_table th:first-child{
+    text-align: left;
+}
+.sample_table td,.bivariate_table td{
+    height: 28px;
+    padding:5px 15px  5px 5px ;
+}
+.bivariate_table tr > td{
+    border-right: 1px solid #e8e8e8;
+    text-align: right;
+}
+.bivariate_table tr > td:last-child{
+    border-right:none;
+}
+.bivariate_table tr> td:first-child{
+    text-align: left;
+}
+.first_bold> tbody> tr:first-child{
+    font-size: 15px;
+    font-weight: bold;
+}
+.border-all td,.border-all th{
+    border: 1px solid #e8e8e8;
+}
+.border-all tr > td:last-child{
+    border: 1px solid #e8e8e8;
+}
+.border-null tr> td{
+    border: none;
+}
+
+.my_table >thead{
+    background-color: #eeeeee;
+    color: #0c0c0c;
+}
+.my_table >thead>tr>th{
+    border-bottom: none;
+}
+.no_th>thead{
+    display: none;
+}
